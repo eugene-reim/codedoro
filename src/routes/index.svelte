@@ -19,8 +19,8 @@
       <div class="countdown h-2/5 flex justify-center items-center">
         <div class="countdown-content absolute place-self-center self-center text-center">
 
-          <p class="countdown-text text-white text-5xl font-bold pb-3">time</p>
-          <p class="sessions leading-10 text-gray-400">sessions</p>
+          <p class="countdown-text text-white text-5xl font-bold pb-3">00:00</p>
+          <p class="sessions leading-10 text-gray-400">0 of 0 sessions</p>
         </div>
         <svg class="progress-ring text-gray-500" width="260" height="260">
 
