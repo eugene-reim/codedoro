@@ -1,0 +1,7 @@
+{
+    "preserve_newlines": true,
+    "beautify.language": {
+        "html":{
+            "ext": ["html", "svelte"]
+        }
+}}
