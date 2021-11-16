@@ -1,10 +1,11 @@
 {
 	"compilerOptions": {
+		"checkJs": true,
 		"baseUrl": ".",
 		"paths": {
 			"$lib": ["src/lib"],
 			"$lib/*": ["src/lib/*"]
 		}
 	},
-	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.svelte"]
+	"include": ["src/**/*.js", "src/**/*.svelte"]
 }
