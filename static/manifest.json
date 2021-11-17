@@ -1,6 +1,7 @@
 {
     "name": "Codedoro App",
     "short_name": "Codedoro",
+    "description": "Codedoro - Pomodoro app from coders for coders",
     "icons": [{
       "src": "icons/icon-128x128.png",
         "sizes": "128x128",
