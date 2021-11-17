@@ -36,16 +36,30 @@ worker.addEventListener('activate', (event) => {
   worker.clients.claim();
 });
  
-self.addEventListener('fetch', (event) => {
+// self.addEventListener('fetch', (event) => {
+//   console.log('[ServiceWorker] Fetch', event.request.url);
+//   if (event.request.mode !== 'navigate') {
+//     return;
+//   }
+//   event.respondWith(
+//     fetch(event.request).catch(() => {
+//       return caches.open(CACHE_NAME).then((cache) => {
+//         return cache.match('index.html');
+//       });
+//     }),
+//   );
+// });
+self.addEventListener('fetch', function(event) {
   console.log('[ServiceWorker] Fetch', event.request.url);
-  if (event.request.mode !== 'navigate') {
-    return;
-  }
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.open(CACHE_NAME).then((cache) => {
-        return cache.match('index.html');
-      });
-    }),
-  );
+  event.respondWith(async function() {
+     try{
+       let res = await fetch(event.request);
+       let cache = await caches.open(CACHE_NAME);
+       cache.put(event.request.url, res.clone());
+       return res;
+     }
+     catch(error){
+       return caches.match(event.request);
+      }
+    }());
 });
