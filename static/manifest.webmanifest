@@ -1,0 +1,35 @@
+{
+    "name": "Codedoro App",
+    "short_name": "Codedoro",
+    "description": "Codedoro - Pomodoro app from coders for coders",
+    "display": "standalone",
+    "start_url": "/",
+    "scope": "/",
+    "theme_color": "#374151",
+    "background_color": "#1F2937",
+    "icons": [{
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/icon-maskable-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/icon-maskable-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}
