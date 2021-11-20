@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { build, files, timestamp } from '$service-worker';
  
 const worker = self;
@@ -36,19 +37,6 @@ worker.addEventListener('activate', (event) => {
   worker.clients.claim();
 });
  
-// self.addEventListener('fetch', (event) => {
-//   console.log('[ServiceWorker] Fetch', event.request.url);
-//   if (event.request.mode !== 'navigate') {
-//     return;
-//   }
-//   event.respondWith(
-//     fetch(event.request).catch(() => {
-//       return caches.open(CACHE_NAME).then((cache) => {
-//         return cache.match('index.html');
-//       });
-//     }),
-//   );
-// });
 self.addEventListener('fetch', function(event) {
   console.log('[ServiceWorker] Fetch', event.request.url);
   event.respondWith(async function() {
