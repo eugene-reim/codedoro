@@ -38,19 +38,18 @@
     import {
         tasks
     } from '../stores/task';
-
+    let modalData = {
+        name: '',
+        sessionTime: 25,
+        breakTime: 5,
+        longBreakTime: 15,
+        sessionsAmount: 4,
+        sessionsPassed: 0,
+        isCurrent: true,
+        isComplete: false
+    }
     function submit() {
-        const result = {
-            name: document.querySelector('.task-name').value || 'Untitled Task',
-            sessionTime: document.querySelector('.session-duration input').value,
-            breakTime: document.querySelector('.break-duration input').value,
-            longBreakTime: document.querySelector('.long-break-duration input').value,
-            sessionsAmount: document.querySelector('.sessions-amount input').value,
-            sessionsPassed: 0,
-            isCurrent: true,
-            isComplete: false
-        }
-        tasks.update(tasks => [...tasks, result])
+        tasks.update(tasks => [...tasks, modalData])
         close()
     }
 </script>
@@ -60,25 +59,25 @@
         <div class="settings-group w-full rounded-xl overflow-hidden bg-gray-700">
             <div class="group-title text-white font-bold text-center pt-6 text-xl">Task Settings</div>
             <div class="group-list flex flex-col p-4">
-                <input class="task-name bg-transparent text-white focus:border-gray-500 border-opacity-50 border-gray-500 border-b-2 outline-none w-full p-2 pl-0 pb-3" type="text" placeholder="Task name">
+                <input class="task-name bg-transparent text-white focus:border-gray-500 border-opacity-50 border-gray-500 border-b-2 outline-none w-full p-2 pl-0 pb-3" type="text" placeholder="Task name" bind:value="{modalData.name}">
                 <div class="session-duration flex p-3 pl-0 pr-0 border-opacity-50 border-gray-500 border-b-2" onclick="document.querySelector('.session-duration input').focus(); document.querySelector('.session-duration input').setSelectionRange(-1, -1);">
                     <p class='text-gray-400 w-full pointer-events-none select-none'>Focus time</p>
-                    <input class="bg-transparent text-gray-400 outline-none w-14 text-right" type="text" value="25" maxlength="2">
+                    <input class="bg-transparent text-gray-400 outline-none w-14 text-right" type="text" maxlength="2" bind:value="{modalData.sessionTime}">
                     <p class='text-gray-400 pl-1 pointer-events-none select-none'>min</p>
                 </div>
                 <div class="break-duration flex p-3 pl-0 pr-0 border-opacity-50 border-gray-500 border-b-2" onclick="document.querySelector('.break-duration input').focus(); document.querySelector('.break-duration input').setSelectionRange(-1, -1);">
                     <p class='text-gray-400 w-full pointer-events-none select-none'>Short break</p>
-                    <input class="bg-transparent text-gray-400 outline-none w-14 text-right" type="text" value="5" maxlength="2">
+                    <input class="bg-transparent text-gray-400 outline-none w-14 text-right" type="text" maxlength="2" bind:value="{modalData.breakTime}">
                     <p class='text-gray-400 pl-1 pointer-events-none select-none'>min</p>
                 </div>
                 <div class="long-break-duration flex p-3 pl-0 pr-0 border-opacity-50 border-gray-500 border-b-2" onclick="document.querySelector('.long-break-duration input').focus(); document.querySelector('.long-break-duration input').setSelectionRange(-1, -1);">
                     <p class='text-gray-400 w-full pointer-events-none select-none'>Long break</p>
-                    <input class="bg-transparent text-gray-400 outline-none w-14 text-right" type="text" value="15" maxlength="2">
+                    <input class="bg-transparent text-gray-400 outline-none w-14 text-right" type="text" maxlength="2" bind:value="{modalData.longBreakTime}">
                     <p class='text-gray-400 pl-1 pointer-events-none select-none'>min</p>
                 </div>
                 <div class="sessions-amount flex p-3 pl-0 pr-0" onclick="document.querySelector('.sessions-amount input').focus(); document.querySelector('.sessions-amount input').setSelectionRange(-1, -1);">
                     <p class='text-gray-400 w-full pointer-events-none select-none'>Working sessions</p>
-                    <input class="bg-transparent text-gray-400 outline-none w-14 text-right" type="text" value="4" maxlength="2">
+                    <input class="bg-transparent text-gray-400 outline-none w-14 text-right" type="text" maxlength="2" bind:value="{modalData.sessionsAmount}">
                     <p class='text-gray-400 pl-1 pointer-events-none select-none'>times</p>
                 </div>
 
