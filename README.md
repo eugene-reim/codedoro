@@ -4,7 +4,7 @@ Pomodoro Application from coders for coders.
 
 Live demo at [codepen.io](https://codepen.io/just_coder/full/OJgqQEa)
 
-## Developing
+## Development
 
 Once you've cloned a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
