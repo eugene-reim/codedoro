@@ -1,11 +1,8 @@
 <script>
-    import {
-        open
-    } from '../components/create-task-modal.svelte';
+    import { open, close } from '../stores/modal.js';
 
     function closeWindow(){
-        window.open('', '_self', ''); 
-        window.close();
+        close();
     }
 </script>
 <nav class="titlebar flex w-full bg-gray-700 p-3 justify-between text-white items-center">
