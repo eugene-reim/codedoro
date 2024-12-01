@@ -1,7 +1,7 @@
-import preprocess from "svelte-preprocess";
 import adapter from '@sveltejs/adapter-static';
+import preprocess from 'svelte-preprocess';
 
-/** @type {import('@sveltejs/vite-plugin-svelte').Config} */
+/** @type {import('@sveltejs/kit').Config} */
 const config = {
   kit: {
     adapter: adapter()
@@ -9,12 +9,9 @@ const config = {
   preprocess: [
     preprocess({
       postcss: true,
-      preserve: ['ld+json'],
-    }),
-  ],
-  compilerOptions: {
-    dev: true
-  }
+      style: true
+    })
+  ]
 };
 
 export default config;

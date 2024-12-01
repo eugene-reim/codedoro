@@ -169,15 +169,3 @@
         <Navbar />
     </div>
 </div>
-
-<style>
-    :global(body) {
-        @apply bg-gray-900;
-        margin: 0;
-        padding: 0;
-    }
-
-    button:disabled {
-        @apply opacity-50 cursor-not-allowed;
-    }
-</style>
