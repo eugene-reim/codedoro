@@ -11,22 +11,16 @@
     function handleSubmit() {
         if (!taskName) return;
 
-        const newTask = {
+        // Add the new task with isCurrent set to true
+        tasks.add({
             name: taskName,
-            sessionTime: parseInt(sessionTime),
-            breakTime: parseInt(breakTime),
-            longBreakTime: parseInt(longBreakTime),
-            sessionsAmount: parseInt(sessionsAmount),
+            sessionTime: sessionTime,
+            breakTime: breakTime,
+            longBreakTime: longBreakTime,
+            sessionsAmount: sessionsAmount,
             sessionsPassed: 0,
             isCurrent: true,
             isComplete: false
-        };
-
-        tasks.update(currentTasks => {
-            // Set all tasks to not current
-            const updatedTasks = currentTasks.map(task => ({...task, isCurrent: false}));
-            // Add new task
-            return [...updatedTasks, newTask];
         });
         
         // Reset form

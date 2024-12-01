@@ -36,18 +36,34 @@ function createTimerStore() {
     }
 
     function updateTaskSessions() {
-        tasks.update($tasks => {
-            const currentTask = $tasks.find(t => t.isCurrent);
-            if (currentTask) {
-                return $tasks.map(task => 
-                    task.isCurrent 
-                        ? { ...task, sessionsPassed: task.sessionsPassed + 1 }
-                        : task
-                );
-            }
-            return $tasks;
-        });
+        const currentTasks = get(tasks);
+        const currentTask = currentTasks.find(t => t.isCurrent);
+        if (currentTask) {
+            tasks.updateSessions(currentTask.id);
+        }
     }
+
+    function stopTimer() {
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+        }
+    }
+
+    // Subscribe to tasks store to handle task switching
+    tasks.subscribe($tasks => {
+        const currentTask = $tasks.find(t => t.isCurrent);
+        if (currentTask) {
+            // Stop timer and reset when switching tasks
+            stopTimer();
+            set({
+                isRunning: false,
+                timeLeft: currentTask.sessionTime * 60,
+                timerType: 'session',
+                completedSessions: 0
+            });
+        }
+    });
 
     function startCountdown() {
         if (intervalId) return;
@@ -193,7 +209,8 @@ function createTimerStore() {
             };
             console.log('Timer reset to:', newState);
             set(newState);
-        }
+        },
+        stopTimer: stopTimer
     };
 }
 

@@ -3,19 +3,19 @@
   "version": "0.0.1",
   "homepage": "https://eugene-reim.github.io/codedoro",
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cpy 'public/**/*' dist",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "^3.0.6",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "autoprefixer": "^10.4.16",
+    "cpy-cli": "^5.0.0",
     "cssnano": "^5.0.8",
     "gh-pages": "^3.2.3",
     "postcss": "^8.4.32",
-    "postcss-import": "^16.1.0",
     "postcss-load-config": "^6.0.1",
     "svelte": "^4.2.8",
     "svelte-preprocess": "^5.1.3",
