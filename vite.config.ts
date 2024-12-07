@@ -18,5 +18,13 @@ export default defineConfig({
   ],
   optimizeDeps: {
     exclude: ['@sveltejs/vite-plugin-svelte']
+  },
+  assetsInclude: ['**/*.svg'],
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name][extname]'
+      }
+    }
   }
 });

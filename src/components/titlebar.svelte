@@ -1,10 +1,33 @@
 <script>
-    import { open, close } from '../stores/modal.js';
+    import { open } from '../stores/modal.ts';
+    import ConfirmExitModal from './confirm-exit-modal.svelte';
 
-    function closeWindow(){
-        close();
+    let showExitConfirm = false;
+
+    function closeWindow() {
+        showExitConfirm = true;
+    }
+
+    function handleConfirmExit() {
+        showExitConfirm = false;
+        // Check if running as PWA
+        if (window.matchMedia('(display-mode: standalone)').matches ||
+            // @ts-ignore
+            window.navigator.standalone === true) {
+            window.close();
+        } else {
+            // Running in browser tab
+            window.close();
+            // Fallback if window.close() doesn't work (most browsers)
+            window.location.href = "about:blank";
+        }
+    }
+
+    function handleCancelExit() {
+        showExitConfirm = false;
     }
 </script>
+
 <nav class="titlebar flex w-full bg-gray-700 p-3 justify-between text-white items-center">
     <button class="exit-btn cursor-pointer" aria-label="Exit app" on:click="{closeWindow}">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 pointer-events-none select-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -20,3 +43,9 @@
         </svg>
     </button>
 </nav>
+
+<ConfirmExitModal 
+    show={showExitConfirm}
+    onConfirm={handleConfirmExit}
+    onCancel={handleCancelExit}
+/>

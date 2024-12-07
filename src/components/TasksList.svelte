@@ -1,10 +1,11 @@
-<script>
-    import { tasks } from '../stores/task.js';
-    import { fly } from 'svelte/transition';
+<script lang="ts">
+    import { tasks } from '../stores/task.ts';
+    import { fly, fade } from 'svelte/transition';
+    import { quintOut } from 'svelte/easing';
     import { onMount } from 'svelte';
 
-    function removeTask(taskId) {
-        tasks.remove(taskId);
+    function removeTask(taskId: string) {
+        tasks.remove(Number(taskId));
     }
 
     onMount(() => {
@@ -12,7 +13,10 @@
     });
 </script>
 
-<div class="absolute inset-0 flex flex-col" transition:fly={{ x: 300, duration: 300 }}>
+<div 
+    in:fly={{ x: 100, y: 0, duration: 400, delay: 0, opacity: 0.2, easing: quintOut }}
+    out:fly={{ x: -100, y: 0, duration: 400, opacity: 0.2, easing: quintOut }}
+    class="h-full w-full">
     <div class="p-4 flex-1 overflow-y-auto">
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-white">Tasks</h1>
@@ -25,7 +29,8 @@
                 {#each $tasks as task (task.id)}
                     <div 
                         class="bg-gray-700 rounded-lg p-4 flex flex-col gap-3"
-                        transition:fly={{ y: 20, duration: 200 }}
+                        in:fly={{ y: 20, duration: 200, delay: 100 }}
+                        out:fade={{ duration: 200 }}
                     >
                         <div class="flex justify-between items-start">
                             <div>
@@ -61,7 +66,7 @@
                                 {/if}
                                 <button 
                                     class="text-gray-400 hover:text-red-500 transition-colors"
-                                    on:click={() => removeTask(task.id)}
+                                    on:click={() => removeTask(String(task.id))}
                                     aria-label="Delete task"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

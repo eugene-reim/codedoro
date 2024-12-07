@@ -1,7 +1,8 @@
 <script>
-    import { timer } from '../stores/timer';
-    import { formatTime } from '../utils/formatTime';
+    import { timer } from '../stores/timer.ts';
+    import { formatTime } from '../utils/formatTime.ts';
     import { fly } from 'svelte/transition';
+    import { quintOut } from 'svelte/easing';
     
     export let currentTask;
     
@@ -33,7 +34,10 @@
     $: strokeDashoffset = 754 * progress;
 </script>
 
-<div class="absolute inset-0 flex flex-col" transition:fly={{ x: -300, duration: 300 }}>
+<div 
+    in:fly={{ x: -100, y: 0, duration: 400, delay: 0, opacity: 0.2, easing: quintOut }}
+    out:fly={{ x: 100, y: 0, duration: 400, opacity: 0.2, easing: quintOut }}
+    class="absolute inset-0 flex flex-col">
     <div class="content flex-1 flex flex-col justify-center">
         <div class="task-title pt-5 md:pt-10 text-center h-1/5">
             <h1 class="header text-gray-400 font-semibold text-sm">CURRENT TASK</h1>

@@ -1,6 +1,6 @@
 <script>
-    import { isOpen, close } from '../stores/modal.js';
-    import { tasks } from '../stores/task.js';
+    import { isOpen, close } from '../stores/modal.ts';
+    import { tasks } from '../stores/task.ts';
     
     let taskName = '';
     let sessionTime = 25;

@@ -4,10 +4,28 @@
     import Titlebar from './components/titlebar.svelte'
     import MainScreen from './components/MainScreen.svelte'
     import TasksList from './components/TasksList.svelte'
-    import { tasks } from './stores/task.js'
-    import { timer } from './stores/timer.js'
-    import { currentScreen } from './stores/screen.js'
+    import StatsScreen from './components/StatsScreen.svelte'
+    import SettingsScreen from './components/SettingsScreen.svelte'
+    import { tasks } from './stores/task.ts'
+    import { timer } from './stores/timer.ts'
+    import { currentScreen } from './stores/screen.ts'
+    import { fly } from 'svelte/transition'
 
+    let previousScreen = 'main';
+    const screenOrder = ['main', 'tasks', 'stats', 'settings'];
+    
+    $: {
+        if ($currentScreen !== previousScreen) {
+            const prevIndex = screenOrder.indexOf(previousScreen);
+            const currentIndex = screenOrder.indexOf($currentScreen);
+            slideDirection = currentIndex > prevIndex ? 1 : -1;
+            previousScreen = $currentScreen;
+        }
+    }
+
+    let slideDirection = 1;
+
+    
     $: currentTask = $tasks.find(task => task.isCurrent) || null;
 
     $: {
@@ -24,11 +42,35 @@
         <Titlebar />
         <CreateTask />
         <div class="flex-1 relative overflow-hidden">
-            {#if $currentScreen === 'main'}
-                <MainScreen {currentTask} />
-            {:else if $currentScreen === 'tasks'}
-                <TasksList />
-            {/if}
+            {#key $currentScreen}
+            <div class="absolute inset-0" 
+                in:fly={{duration: 200, x: 400 * slideDirection}} 
+                out:fly={{duration: 200, x: -400 * slideDirection}}>
+                {#if $currentScreen === 'main'}
+                    <div class="h-full">
+                        <MainScreen {currentTask} />
+                    </div>
+                {/if}
+                
+                {#if $currentScreen === 'tasks'}
+                    <div class="h-full">
+                        <TasksList />
+                    </div>
+                {/if}
+
+                {#if $currentScreen === 'stats'}
+                    <div class="h-full">
+                        <StatsScreen />
+                    </div>
+                {/if}
+
+                {#if $currentScreen === 'settings'}
+                    <div class="h-full">
+                        <SettingsScreen />
+                    </div>
+                {/if}
+            </div>
+            {/key}
         </div>
         <Navbar />
     </div>

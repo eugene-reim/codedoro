@@ -1,24 +1,41 @@
-import { writable, get } from 'svelte/store';
-import { tasks } from './task.js';
+import { writable, get, type Writable } from 'svelte/store';
+import { tasks } from './task';
+import type { Task } from './task';
 
 const SESSIONS_BEFORE_LONG_BREAK = 4;
 
-function createTimerStore() {
-    let audio;
+interface TimerState {
+    isRunning: boolean;
+    timeLeft: number;
+    timerType: 'session' | 'break' | 'longBreak';
+    completedSessions: number;
+}
+
+interface TimerStore {
+    subscribe: Writable<TimerState>['subscribe'];
+    start: () => void;
+    pause: () => void;
+    reset: () => void;
+    stopTimer: () => void;
+    skip: () => void;
+}
+
+function createTimerStore(): TimerStore {
+    let audio: HTMLAudioElement | undefined;
     if (typeof window !== 'undefined') {
         audio = new Audio('/notification.mp3');
     }
 
-    const { subscribe, set, update } = writable({
+    const { subscribe, set, update } = writable<TimerState>({
         isRunning: false,
         timeLeft: 0,
         timerType: 'session',
         completedSessions: 0
     });
 
-    let intervalId = null;
+    let intervalId: NodeJS.Timeout | null = null;
 
-    function playSound() {
+    function playSound(): void {
         if (audio) {
             audio.currentTime = 0;
             const playPromise = audio.play();
@@ -28,14 +45,14 @@ function createTimerStore() {
                     .then(() => {
                         // Sound played successfully
                     })
-                    .catch(err => {
+                    .catch((err: Error) => {
                         console.log('Sound playback failed:', err);
                     });
             }
         }
     }
 
-    function updateTaskSessions() {
+    function updateTaskSessions(): void {
         const currentTasks = get(tasks);
         const currentTask = currentTasks.find(t => t.isCurrent);
         if (currentTask) {
@@ -43,15 +60,42 @@ function createTimerStore() {
         }
     }
 
-    function stopTimer() {
+    function stopTimer(): void {
         if (intervalId) {
             clearInterval(intervalId);
             intervalId = null;
         }
     }
 
+    function skip(): void {
+        stopTimer();
+        update(state => {
+            const currentTask = get(tasks)[0];
+            if (!currentTask) return state;
+
+            let newState = { ...state };
+            
+            if (state.timerType === 'session') {
+                newState.completedSessions += 1;
+                if (newState.completedSessions % SESSIONS_BEFORE_LONG_BREAK === 0) {
+                    newState.timerType = 'longBreak';
+                    newState.timeLeft = currentTask.longBreakTime * 60;
+                } else {
+                    newState.timerType = 'break';
+                    newState.timeLeft = currentTask.breakTime * 60;
+                }
+            } else {
+                newState.timerType = 'session';
+                newState.timeLeft = currentTask.sessionTime * 60;
+            }
+            
+            newState.isRunning = false;
+            return newState;
+        });
+    }
+
     // Subscribe to tasks store to handle task switching
-    tasks.subscribe($tasks => {
+    tasks.subscribe(($tasks: Task[]) => {
         const currentTask = $tasks.find(t => t.isCurrent);
         if (currentTask) {
             // Stop timer and reset when switching tasks
@@ -65,7 +109,7 @@ function createTimerStore() {
         }
     });
 
-    function startCountdown() {
+    function startCountdown(): void {
         if (intervalId) return;
 
         console.log('[Timer] Starting countdown with state:', get({ subscribe }));
@@ -73,8 +117,10 @@ function createTimerStore() {
         intervalId = setInterval(() => {
             update(state => {
                 if (state.timeLeft <= 1) {
-                    clearInterval(intervalId);
-                    intervalId = null;
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
                     playSound();
 
                     console.log('[Timer] Phase ended:', {
@@ -86,7 +132,7 @@ function createTimerStore() {
                     const currentTask = get(tasks).find(t => t.isCurrent);
                     if (!currentTask) return state;
 
-                    let nextState;
+                    let nextState: TimerState;
                     if (state.timerType === 'session') {
                         const newCompletedSessions = state.completedSessions + 1;
                         updateTaskSessions();
@@ -94,11 +140,10 @@ function createTimerStore() {
                         // Check if this was the last session
                         if (newCompletedSessions === currentTask.sessionsAmount) {
                             // Mark task as complete and pause timer
-                            tasks.update($tasks => $tasks.map(task => 
-                                task.isCurrent 
-                                    ? { ...task, isComplete: true, isCurrent: false }
-                                    : task
-                            ));
+                            if (currentTask) {
+                                tasks.toggleComplete(currentTask.id);
+                                tasks.setCurrent(0); // Using 0 or -1 to indicate no current task
+                            }
                             
                             nextState = {
                                 isRunning: false,
@@ -201,7 +246,7 @@ function createTimerStore() {
                 clearInterval(intervalId);
                 intervalId = null;
             }
-            const newState = {
+            const newState: TimerState = {
                 isRunning: false,
                 timeLeft: currentTask.sessionTime * 60,
                 timerType: 'session',
@@ -210,7 +255,8 @@ function createTimerStore() {
             console.log('Timer reset to:', newState);
             set(newState);
         },
-        stopTimer: stopTimer
+        stopTimer,
+        skip
     };
 }
 

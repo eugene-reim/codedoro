@@ -1,26 +1,38 @@
 # Codedoro
 
-Pomodoro Application from coders for coders.
+[![svelte](https://img.shields.io/badge/Svelte-4.0-orange.svg?style=flat-square)](https://svelte.dev) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier) [![license: MIT](https://img.shields.io/npm/l/@sveltejs/adapter-static?style=flat-square)](https://opensource.org/licenses/MIT)
 
-Live demo at [codepen.io](https://codepen.io/just_coder/full/OJgqQEa)
+A Pomodoro Application from coders for coders.
 
-## Development
+[Live demo at codepen.io](https://codepen.io/just_coder/full/OJgqQEa)
 
-Once you've cloned a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Features:
+- [x] Pomodoro timer
+- [x] Task list to switch between tasks and manage them
+- [-] Statistics (work in progress)
+- [-] Settings (work in progress)
 
-```bash
-npm run dev
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+## Available Scripts
 
-## Building
+In the project directory, you can run:
 
-Before creating a production version of your app, install an [adapter](https://kit.svelte.dev/docs#adapters) for your target environment. Then:
+### `yarn dev`
 
-```bash
-npm run build
-```
+Runs the app in the development mode.\
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-> You can preview the built app with `npm run preview`, regardless of whether you installed an adapter. This should _not_ be used to serve your app in production.
+### `yarn build`
+
+Builds the app for production to the `dist` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+By default, it also includes a service worker so that your app loads from local cache on future visits.
+
+Your app is ready to be deployed!\
+
+### `yarn preview`
+
+Locally preview production build.\
