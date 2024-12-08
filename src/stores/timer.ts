@@ -43,7 +43,7 @@ function createTimerStore(): TimerStore {
             if (playPromise !== undefined) {
                 playPromise
                     .then(() => {
-                        // Sound played successfully
+                        console.log('Sound played successfully');
                     })
                     .catch((err: Error) => {
                         console.log('Sound playback failed:', err);

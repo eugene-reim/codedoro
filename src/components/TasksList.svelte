@@ -3,7 +3,7 @@
     import { fly, fade } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
     import { onMount } from 'svelte';
-
+    import { t } from 'svelte-i18n';
     function removeTask(taskId: string) {
         tasks.remove(Number(taskId));
     }
@@ -19,38 +19,38 @@
     class="h-full w-full">
     <div class="p-4 flex-1 overflow-y-auto">
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-white">Tasks</h1>
+            <h1 class="text-2xl font-bold text-[--text-primary]">{$t('TasksListScreen_Title')}</h1>
         </div>
         
         <div class="space-y-4">
             {#if $tasks.length === 0}
-                <p class="text-gray-400 text-center py-8">No tasks added yet</p>
+                <p class="text-[--text-secondary] text-center py-8">{$t('TasksListScreen_NoTasksLabel')}</p>
             {:else}
                 {#each $tasks as task (task.id)}
                     <div 
-                        class="bg-gray-700 rounded-lg p-4 flex flex-col gap-3"
+                        class="bg-[--bg-secondary] rounded-lg p-4 flex flex-col gap-3"
                         in:fly={{ y: 20, duration: 200, delay: 100 }}
                         out:fade={{ duration: 200 }}
                     >
                         <div class="flex justify-between items-start">
                             <div>
-                                <h3 class="text-white font-medium text-lg">{task.name}</h3>
-                                <p class="text-gray-400 text-sm mt-1">
+                                <h3 class="text-[--text-primary] font-medium text-lg">{task.name}</h3>
+                                <p class="text-[--text-secondary] text-sm mt-1">
                                     {#if task.isCurrent}
-                                        Current Task
+                                        {$t('TasksListScreen_CurrentTaskLabel')}
                                     {:else if task.isComplete}
-                                        Completed
+                                        {$t('TasksListScreen_CompletedTaskLabel')}
                                     {:else}
-                                        Pending
+                                        {$t('TasksListScreen_PendingTaskLabel')}
                                     {/if}
                                 </p>
                             </div>
                             <div class="flex space-x-2">
                                 {#if !task.isComplete}
                                     <button 
-                                        class="text-gray-400 hover:text-yellow-300 transition-colors"
+                                        class="text-[--text-secondary] hover:text-[--accent] transition-colors"
                                         on:click={() => tasks.setCurrent(task.id)}
-                                        aria-label={task.isCurrent ? "Current task" : "Set as current task"}
+                                        aria-label={task.isCurrent ? $t('TasksListScreen_CurrentTaskLabel') : $t('TasksListScreen_SetAsCurrentTaskLabel')}
                                     >
                                         {#if task.isCurrent}
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -65,7 +65,7 @@
                                     </button>
                                 {/if}
                                 <button 
-                                    class="text-gray-400 hover:text-red-500 transition-colors"
+                                    class="text-[--text-secondary] hover:text-[--warning] transition-colors"
                                     on:click={() => removeTask(String(task.id))}
                                     aria-label="Delete task"
                                 >
@@ -77,26 +77,26 @@
                         </div>
                         
                         <div class="grid grid-cols-2 gap-2 text-sm">
-                            <div class="bg-gray-800 rounded p-2">
-                                <p class="text-gray-400">Sessions</p>
-                                <p class="text-white font-medium">{task.sessionsPassed} / {task.sessionsAmount}</p>
+                            <div class="bg-[--bg-primary] rounded p-2">
+                                <p class="text-[--text-secondary]">{$t('TasksListScreen_ListItemSessionsLabel')}</p>
+                                <p class="text-[--text-primary] font-medium">{task.sessionsPassed} / {task.sessionsAmount}</p>
                             </div>
-                            <div class="bg-gray-800 rounded p-2">
-                                <p class="text-gray-400">Session Length</p>
-                                <p class="text-white font-medium">{task.sessionTime} min</p>
+                            <div class="bg-[--bg-primary] rounded p-2">
+                                <p class="text-[--text-secondary]">{$t('TasksListScreen_ListItemSessionLengthLabel')}</p>
+                                <p class="text-[--text-primary] font-medium">{task.sessionTime} {$t('TasksListScreen_ListItemMinutesLabel')}</p>
                             </div>
-                            <div class="bg-gray-800 rounded p-2">
-                                <p class="text-gray-400">Break Length</p>
-                                <p class="text-white font-medium">{task.breakTime} min</p>
+                            <div class="bg-[--bg-primary] rounded p-2">
+                                <p class="text-[--text-secondary]">{$t('TasksListScreen_ListItemBreakLengthLabel')}</p>
+                                <p class="text-[--text-primary] font-medium">{task.breakTime} {$t('TasksListScreen_ListItemMinutesLabel')}</p>
                             </div>
-                            <div class="bg-gray-800 rounded p-2">
-                                <p class="text-gray-400">Long Break</p>
-                                <p class="text-white font-medium">{task.longBreakTime} min</p>
+                            <div class="bg-[--bg-primary] rounded p-2">
+                                <p class="text-[--text-secondary]">{$t('TasksListScreen_ListItemLongBreakLabel')}</p>
+                                <p class="text-[--text-primary] font-medium">{task.longBreakTime} {$t('TasksListScreen_ListItemMinutesLabel')}</p>
                             </div>
                         </div>
-                        <div class="w-full bg-gray-800 rounded-full h-2 mt-1">
+                        <div class="w-full bg-[--bg-primary] rounded-full h-2 mt-1">
                             <div 
-                                class="bg-yellow-300 h-2 rounded-full transition-all duration-300" 
+                                class="bg-[--warning] h-2 rounded-full transition-all duration-300" 
                                 style="width: {(task.sessionsPassed / task.sessionsAmount) * 100}%"
                             ></div>
                         </div>

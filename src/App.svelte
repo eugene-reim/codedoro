@@ -10,7 +10,25 @@
     import { timer } from './stores/timer.ts'
     import { currentScreen } from './stores/screen.ts'
     import { fly } from 'svelte/transition'
+    import { applyTheme } from './stores/theme';
+    import { onMount } from 'svelte';
+    import { init, register, getLocaleFromNavigator, locale } from 'svelte-i18n';
+    // Register your translations
+    register('English', () => import('./locales/en.json'));
+    register('Русский', () => import('./locales/ru.json'));
 
+    // Retrieve the saved language from localStorage
+    const savedLanguage = localStorage.getItem('language') || getLocaleFromNavigator() || 'English';
+
+    // Initialize with the default language
+    init({
+        fallbackLocale: 'English',
+        initialLocale: savedLanguage
+    });
+    locale.set(savedLanguage);
+    onMount(() => {
+        applyTheme();
+    });
     let previousScreen = 'main';
     const screenOrder = ['main', 'tasks', 'stats', 'settings'];
     
@@ -38,7 +56,7 @@
 </script>
 
 <div class="min-h-screen flex justify-center">
-    <div class="w-full max-w-[420px] h-screen overflow-hidden flex flex-col relative bg-gray-800 md:rounded-xl">
+    <div class="w-full max-w-[420px] h-screen overflow-hidden flex flex-col relative bg-[--bg-primary] md:rounded-xl">
         <Titlebar />
         <CreateTask />
         <div class="flex-1 relative overflow-hidden">

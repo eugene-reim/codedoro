@@ -1,8 +1,7 @@
 <script>
     import { timer } from '../stores/timer.ts';
     import { formatTime } from '../utils/formatTime.ts';
-    import { fly } from 'svelte/transition';
-    import { quintOut } from 'svelte/easing';
+    import { t } from 'svelte-i18n';
     
     export let currentTask;
     
@@ -32,43 +31,36 @@
 
     $: progress = 1 - ($timer.timeLeft / totalTime);
     $: strokeDashoffset = 754 * progress;
+
+
 </script>
 
-<div 
-    in:fly={{ x: -100, y: 0, duration: 400, delay: 0, opacity: 0.2, easing: quintOut }}
-    out:fly={{ x: 100, y: 0, duration: 400, opacity: 0.2, easing: quintOut }}
-    class="absolute inset-0 flex flex-col">
+<div class="absolute inset-0 flex flex-col">
     <div class="content flex-1 flex flex-col justify-center">
         <div class="task-title pt-5 md:pt-10 text-center h-1/5">
-            <h1 class="header text-gray-400 font-semibold text-sm">CURRENT TASK</h1>
-            <p class="task text-white text-xl font-bold">
+            <h1 class="header text-[--text-secondary] font-semibold text-sm">{$t('MainScreen_CurrentTaskLabel')}</h1>
+            <p class="task text-[--text-primary] text-xl font-bold">
                 {#if currentTask}
                     {currentTask.name}
                 {:else}
-                    Press + to create a new task
+                    {$t('MainScreen_CreateTaskLabel')}
                 {/if}
             </p>
         </div>
         <div class="countdown h-2/5 flex justify-center items-center">
             <div class="countdown-content absolute place-self-center self-center text-center">
-                <p class="countdown-text text-white text-5xl font-bold pb-3">
+                <p class="countdown-text text-[--text-primary] text-5xl font-bold pb-3">
                     {#if currentTask}
                         {formatTime($timer.timeLeft)}
                     {:else}
                         00:00
                     {/if}
                 </p>
-                <p class="sessions leading-10 text-gray-400">
+                <p class="sessions leading-10 text-[--text-secondary]">
                     {#if currentTask}
-                        {#if $timer.timerType === 'session'}
-                            {currentTask.sessionsPassed} of {currentTask.sessionsAmount} sessions
-                        {:else if $timer.timerType === 'break'}
-                            Short Break
-                        {:else}
-                            Long Break
-                        {/if}
+                        {currentTask.sessionsPassed} {$t('MainScreen_SessionOfLabel')} {currentTask.sessionsAmount} {$t('MainScreen_SessionsLabel')}
                     {:else}
-                        0 of 0 sessions
+                        {$t('MainScreen_SessionsDummyLabel')}
                     {/if}
                 </p>
             </div>
@@ -83,7 +75,7 @@
                     cy="130" 
                 />
                 <circle 
-                    class="progress-ring__circle {$timer.timerType === 'session' ? 'text-yellow-300' : 'text-green-400'} transform -rotate-90 origin-center duration-700" 
+                    class="transition-all {$timer.isRunning ? 'text-red-500' : $timer.timerType === 'break' || $timer.timerType === 'longBreak' ? 'text-green-400' : 'text-yellow-400'} transform -rotate-90 origin-center duration-700" 
                     stroke="currentColor" 
                     stroke-linecap="round" 
                     stroke-width="9" 
@@ -96,24 +88,23 @@
             </svg>
         </div>
         <div class="countdown-footer h-2/5 flex flex-col justify-center gap-14">
-            <p class="session-status text-white text-center self-top">
+            <p class="session-status text-[--text-primary] text-center self-top">
                 {#if currentTask}
                     {#if $timer.timerType === 'session'}
-                        {$timer.isRunning ? 'Focus time!' : 'Ready to start'}
+                        {$timer.isRunning ? $t('MainScreen_SessionIsRunningLabel') : $t('MainScreen_SessionIsPausedLabel')}
                     {:else if $timer.timerType === 'break'}
-                        Break time!
+                        {$t('MainScreen_BreakIsRunningLabel')}
                     {:else if $timer.timerType === 'longBreak'}
-                        Long break time!
+                        {$t('MainScreen_LongBreakIsRunningLabel')}
                     {/if}
                 {:else}
-                    Create Task to start
+                    {$t('MainScreen_CreateTaskToStartLabel')}
                 {/if}
             </p>
             <div class="countdown-controls flex justify-between items-center pl-10 pr-10">
                 <button 
                     class="reset-btn text-gray-500 hover:text-white transition-colors" 
                     aria-label="Restart session"
-                    on:click={handleReset}
                     disabled={!currentTask}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -121,7 +112,7 @@
                     </svg>
                 </button>
                 <button 
-                    class="play-pause-btn text-white {$timer.isRunning ? 'bg-red-500' : ($timer.timerType === 'session' ? 'bg-yellow-300' : 'bg-green-400')} rounded-full p-2 transform duration-700 hover:scale-105" 
+                    class=" transition-all play-pause-btn text-white {$timer.isRunning ? 'bg-red-500' : $timer.timerType === 'break' || $timer.timerType === 'longBreak' ? 'bg-green-400' : 'bg-yellow-400'} rounded-full p-2 transform duration-700 hover:scale-105" 
                     aria-label={$timer.isRunning ? "Pause session" : "Start session"}
                     on:click={handlePlayPause}
                     disabled={!currentTask}
@@ -139,7 +130,6 @@
                 <button 
                     class="skip-btn text-gray-500 hover:text-white transition-colors" 
                     aria-label="Skip session"
-                    on:click={handleSkip}
                     disabled={!currentTask}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -150,9 +140,3 @@
         </div>
     </div>
 </div>
-
-<style>
-    .progress-ring__circle {
-        transition: stroke-dashoffset 0.35s;
-    }
-</style>
