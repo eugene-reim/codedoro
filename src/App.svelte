@@ -15,7 +15,7 @@
     import { init, register, getLocaleFromNavigator, locale } from 'svelte-i18n';
     // Register your translations
     register('English', () => import('./locales/en.json'));
-    register('Русский', () => import('./locales/ru.json'));
+    register('Russian', () => import('./locales/ru.json'));
 
     // Retrieve the saved language from localStorage
     const savedLanguage = localStorage.getItem('language') || getLocaleFromNavigator() || 'English';

@@ -17,7 +17,7 @@
         localStorage.setItem('language', selectedLanguage); // Save to localStorage
     }
 
-    const languageOptions = ['English', 'Русский'];
+    const languageOptions = ['English', 'Russian'];
 </script>
 
 <div class="h-full p-4">
