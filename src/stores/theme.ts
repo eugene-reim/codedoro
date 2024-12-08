@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 
 export const theme = writable({
-  darkMode: false
+  darkMode: true
 });
 
 // Initialize dark mode from local storage
