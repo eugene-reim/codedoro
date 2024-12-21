@@ -49,7 +49,7 @@
                                 {#if !task.isComplete}
                                     <button 
                                         class="text-[--text-secondary] hover:text-[--accent] transition-colors"
-                                        on:click={() => tasks.setCurrent(task.id)}
+                                        onclick={() => tasks.setCurrent(task.id)}
                                         aria-label={task.isCurrent ? $t('TasksListScreen_CurrentTaskLabel') : $t('TasksListScreen_SetAsCurrentTaskLabel')}
                                     >
                                         {#if task.isCurrent}
@@ -66,7 +66,7 @@
                                 {/if}
                                 <button 
                                     class="text-[--text-secondary] hover:text-[--warning] transition-colors"
-                                    on:click={() => removeTask(String(task.id))}
+                                    onclick={() => removeTask(String(task.id))}
                                     aria-label="Delete task"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

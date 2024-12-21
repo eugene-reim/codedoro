@@ -1,4 +1,6 @@
 <script>
+    import { run } from 'svelte/legacy';
+
     import CreateTask from './components/create-task-modal.svelte'
     import Navbar from './components/navbar.svelte'
     import Titlebar from './components/titlebar.svelte'
@@ -29,30 +31,30 @@
     onMount(() => {
         applyTheme();
     });
-    let previousScreen = 'main';
+    let previousScreen = $state('main');
     const screenOrder = ['main', 'tasks', 'stats', 'settings'];
     
-    $: {
+    run(() => {
         if ($currentScreen !== previousScreen) {
             const prevIndex = screenOrder.indexOf(previousScreen);
             const currentIndex = screenOrder.indexOf($currentScreen);
             slideDirection = currentIndex > prevIndex ? 1 : -1;
             previousScreen = $currentScreen;
         }
-    }
+    });
 
-    let slideDirection = 1;
+    let slideDirection = $state(1);
 
     
-    $: currentTask = $tasks.find(task => task.isCurrent) || null;
+    let currentTask = $derived($tasks.find(task => task.isCurrent) || null);
 
-    $: {
+    run(() => {
         if (currentTask) {
             if ($timer.timeLeft === 0 && !$timer.isRunning && $timer.timerType === 'session') {
                 timer.reset();
             }
         }
-    }
+    });
 </script>
 
 <div class="min-h-screen flex justify-center">

@@ -5,3 +5,10 @@ node_modules
 build
 dist
 .vscode
+
+# npm, yarn and bun lock files
+package-lock.json
+yarn.lock
+bun.lockb
+# rust compiled folders
+target/

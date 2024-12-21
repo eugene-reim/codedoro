@@ -2,14 +2,14 @@
     import { currentScreen } from '../stores/screen.ts';
     import { fly } from 'svelte/transition';
 
-    $: activeScreen = $currentScreen;
+    let activeScreen = $derived($currentScreen);
 </script>
 
 <nav class="navbar bg-[--bg-secondary] p-3 pb-2 flex justify-between items-center text-[--text-secondary]">
     <button 
         class="timer-btn relative" 
         class:active={activeScreen === 'main'}
-        on:click={() => currentScreen.set('main')}
+        onclick={() => currentScreen.set('main')}
         aria-label="Open timer screen"
     >
         {#if activeScreen === 'main'}
@@ -24,7 +24,7 @@
     <button 
         class="tasks-btn relative" 
         class:active={activeScreen === 'tasks'}
-        on:click={() => currentScreen.set('tasks')}
+        onclick={() => currentScreen.set('tasks')}
         aria-label="Open tasks screen"
     >
         {#if activeScreen === 'tasks'}
@@ -39,7 +39,7 @@
     <button 
         class="stats-btn relative" 
         class:active={activeScreen === 'stats'}
-        on:click={() => currentScreen.set('stats')}
+        onclick={() => currentScreen.set('stats')}
         aria-label="Open statistics screen"
     >
         {#if activeScreen === 'stats'}
@@ -54,7 +54,7 @@
     <button 
         class="settings-btn relative" 
         class:active={activeScreen === 'settings'}
-        on:click={() => currentScreen.set('settings')}
+        onclick={() => currentScreen.set('settings')}
         aria-label="Open settings screen"
     >
         {#if activeScreen === 'settings'}

@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
     import { timer } from '../stores/timer.ts';
     import { formatTime } from '../utils/formatTime.ts';
     import { t } from 'svelte-i18n';
     
-    export let currentTask;
+    let { currentTask } = $props();
     
     function handleReset() {
         timer.reset();
@@ -21,16 +21,16 @@
         timer.skip();
     }
 
-    $: totalTime = currentTask ? (
+    let totalTime = $derived(currentTask ? (
         $timer.timerType === 'session' 
             ? currentTask.sessionTime * 60 
             : $timer.timerType === 'break' 
                 ? currentTask.breakTime * 60 
                 : currentTask.longBreakTime * 60
-    ) : 1;
+    ) : 1);
 
-    $: progress = 1 - ($timer.timeLeft / totalTime);
-    $: strokeDashoffset = 754 * progress;
+    let progress = $derived(1 - ($timer.timeLeft / totalTime));
+    let strokeDashoffset = $derived(754 * progress);
 
 
 </script>
@@ -114,7 +114,7 @@
                 <button 
                     class=" transition-all play-pause-btn text-white {$timer.isRunning ? 'bg-red-500' : $timer.timerType === 'break' || $timer.timerType === 'longBreak' ? 'bg-green-400' : 'bg-yellow-400'} rounded-full p-2 transform duration-700 hover:scale-105" 
                     aria-label={$timer.isRunning ? "Pause session" : "Start session"}
-                    on:click={handlePlayPause}
+                    onclick={handlePlayPause}
                     disabled={!currentTask}
                 >
                     {#if $timer.isRunning}
